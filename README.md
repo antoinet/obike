@@ -3,6 +3,10 @@
 This document provides an analysis of the oBike communication protocols as of
 January 2018.
 
+Results have been presented at the [AREA41 security conference 2018](https://a41con.ch/):
+ * [slides](https://www.slideshare.net/AntoineNeuenschwande/on-the-security-of-dockless-bike-sharing-services)
+ * [recording](https://www.youtube.com/watch?v=KKlCLsU4v7o)
+
 ## General oBike Communication
 
 The oBike lock consists of a TI CC2541 microcontroller, a power-optimized
