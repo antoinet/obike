@@ -614,6 +614,15 @@ Server: cloudflare-nginx
 }
 ```
 
+## Installation
+```
+ $ apt update
+ $ apt install git build-essential python python-pip libbluetooth-dev libglib2.0-dev
+ $ git clone https://github.com/antoinet/obike.git
+ $ cd obike
+ $ pip install -r requirements
+```
+
 ## References
  * [oBike lock teardown and rebuild, dockless share bike rescue](https://www.youtube.com/watch?v=Vl3Gl8w8n-Q)
  * [Exploration of Weakness in Bike Sharing System](http://www.comp.nus.edu.sg/~hugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf), [alternative source](http://web.archive.org/web/20180102175104/http://www.comp.nus.edu.sg/%7Ehugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf)
