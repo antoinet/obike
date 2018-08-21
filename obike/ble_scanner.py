@@ -1,11 +1,11 @@
 from bluepy import btle
 from hexdump import hexdump
-from obikepoc.lockdb import lockdb
+from obike.lockdb import lockdb
 
 class BleScanner(object):
 
     class ScanDelegate(btle.DefaultDelegate):
-        
+
         def __init__(self):
             btle.DefaultDelegate.__init__(self)
 
@@ -23,5 +23,6 @@ class BleScanner(object):
     def scan(self, t=10):
         print "[*] scanning (%ds)..." % t
         devices = self.scanner.scan(t)
-        return [dev for dev in devices if dev.addr.upper().startswith('D4')]
+        #return [dev for dev in devices if dev.addr.upper().startswith('D4')]
+        return devices
 
