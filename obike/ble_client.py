@@ -89,3 +89,6 @@ class BleClient(object):
                 keys[0:12]
         result = self.write_cmd(0x82, buffer)
 
+    def reset(self):
+        print "Reset chip"
+        result = self.write_cmd(0x89, '')
