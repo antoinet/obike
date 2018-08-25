@@ -219,6 +219,16 @@ The obike responds with a single status byte (00):
 00000000  67 74 01 42 00 42                                 |gt.B.B|
 ```
 
+### BLE Reset
+
+Command type: `9`    
+Reset the CC2541 chip.
+```
+00000000: 67 74 00 89 89                                    gt...
+```
+
+No answer is returned.
+
 ## oBike HTTP REST API
 
 A client for the obike REST API including encryption layer is implemented in the
