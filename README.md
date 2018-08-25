@@ -55,7 +55,8 @@ Message     | ---------------------> | lockMessage(macKey,index) |
 
 Steps:
 1. BLE send `hello` message, push coordinates to lock.
-2. BLE receive `keySource`, a 32bit random challenge.
+2. BLE receive `keySource`, a 32bit value representing the number of
+   milliseconds since the chip was powered (little endian).
 3. HTTPS send keySource to oBike backend via the `unlockPass` REST call.
 4. HTTPS receive `encKey` (key index) and a 128bit key value in `keys`.
 5. BLE send `encKey` (truncated to 96bits) and the `index` ( corresponds to
@@ -179,7 +180,7 @@ Offset Value                    Description
  000e  34372e333732373630       latitude (47.372763)
 ```
 
-In response, the obike sends a challenge (random 32bit integer):
+In response, the obike sends a challenge, a 32bit integer (little endian):
 ```
 00000000  67 74 0b 41 00 11 51 00  06 ef 5f 34 aa 01 00 28  |gt.A..Q..._4...(|
 ```
