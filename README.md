@@ -180,7 +180,8 @@ Offset Value                    Description
  000e  34372e333732373630       latitude (47.372763)
 ```
 
-In response, the obike sends a challenge, a 32bit integer (little endian):
+In response, the obike sends a challenge, a 32bit integer (little endian)
+representing the number of milliseconds elapsed since poweron:
 ```
 00000000  67 74 0b 41 00 11 51 00  06 ef 5f 34 aa 01 00 28  |gt.A..Q..._4...(|
 ```
