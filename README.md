@@ -639,3 +639,4 @@ Server: cloudflare-nginx
  * [oBike lock teardown and rebuild, dockless share bike rescue](https://www.youtube.com/watch?v=Vl3Gl8w8n-Q)
  * [Exploration of Weakness in Bike Sharing System](http://www.comp.nus.edu.sg/~hugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf), [alternative source](http://web.archive.org/web/20180102175104/http://www.comp.nus.edu.sg/%7Ehugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf)
  * [FCC filing Huangzhou Luoping Electronics - Smart Locker HBT203](https://fccid.io/2ALWC-HBT203)
+ * [CVE-2018-16242](https://seclists.org/bugtraq/2018/Sep/30)
