@@ -639,4 +639,5 @@ Server: cloudflare-nginx
  * [oBike lock teardown and rebuild, dockless share bike rescue](https://www.youtube.com/watch?v=Vl3Gl8w8n-Q)
  * [Exploration of Weakness in Bike Sharing System](http://www.comp.nus.edu.sg/~hugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf), [alternative source](http://web.archive.org/web/20180102175104/http://www.comp.nus.edu.sg/%7Ehugh/CS3235/CS3235-SemI-2017-18-FinalProjects.pdf)
  * [FCC filing Huangzhou Luoping Electronics - Smart Locker HBT203](https://fccid.io/2ALWC-HBT203)
+ * [Les vélos en libre service dans les villes de Zurich et de Berne sont désormais retirés de la circulation temporairement, rts.ch](https://www.rts.ch/play/tv/19h30/video/les-velos-en-libre-service-dans-les-villes-de-zurich-et-de-berne-sont-desormais-retires-de-la-circulation-temporairement?id=9797225&station=a9e7621504c6960e35c3ecbe7f6bed0446cdf8da)
  * [CVE-2018-16242](https://seclists.org/bugtraq/2018/Sep/30)
