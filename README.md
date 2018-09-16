@@ -107,23 +107,26 @@ The check byte is computed from XORing the command type and the payload bytes:
 The maximumn PDU size is 19 bytes (header + payload + trailer). Messages
 exceeding this size are fragmented.
 
-### BLE Hello Command
+### BLE getLockRecord/deleteLockRecord
 
 Command type: `6`  
-These messages are used to initiate the communication. The first message is sent
-by the mobile device and has an empty payload:
+These messages are used to manage the "lock record", a data record persisted by
+the chip consisting of information from the last ride, such as memberid,
+timestamp, oBike identifier, coordinates, etc.
 
+Called without a payload, the command is used to retrieve the saved lock
+record:
 ```
 00000000  67 74 00 86 86                                    |gt...|
 ```
 
-The obike lock responds with an empty response:
+If no lock record is available, the lock responds with an empty payload.
 ```
 00000000  67 74 00 46 46                                    |gt.FF|
 ```
 
-In case the obike is in the unlocked state, the response contains several values
-from the last ride, in the following format:
+Otherwise, the lock's response contains several values from the last ride, in
+the following format:
 
 ```
 00000000  67 74 46 46 00 00 01 23  45 67 59 9d 72 2a 44 31  |gtFF...#d2Y.r*D1|
@@ -158,7 +161,25 @@ Offset Value                    Description
 
  0044  91                       key index
 
- 0045  000000a901               ?
+ 0045  000000                   ?
+ 004b  a901                     battery voltag level (little endian)
+                                e.g. 4.25V
+```
+
+When used with a payload, this command deletes the current lock record:
+
+```
+00000000  67 74 0d 86 59 d5 ff a4  36 33 39 38 37 37 31 33  |gt..Y...63987713|
+00000010  43 14                                             |C.|
+```
+
+The payload consists of the current timestamp and the obike identifier:
+
+```
+Offset Value                    Description
+-------------------------------------------------------------------------
+ 0004  59d5ffa4                 timestamp (little endian)
+ 000e  3633393837373133         "63987713C" obike identifier
 ```
 
 ### BLE Push Coords / Get Challenge
@@ -180,8 +201,14 @@ Offset Value                    Description
  000e  34372e333732373630       latitude (47.372763)
 ```
 
+The command may also be used without a payload:
+```
+00000000 67 74 00 81 81                                     |gt...|
+```
+
 In response, the obike sends a challenge, a 32bit integer (little endian)
 representing the number of milliseconds elapsed since poweron:
+
 ```
 00000000  67 74 0b 41 00 11 51 00  06 ef 5f 34 aa 01 00 28  |gt.A..Q..._4...(|
 ```
@@ -189,10 +216,11 @@ representing the number of milliseconds elapsed since poweron:
 ```
 Offset Value                    Description
 -------------------------------------------------------------------------
- 0004  00115100                 ? (constant)
+ 0004  00115100                 ? (constant, sometimes also 00115900)
  0008  06ef5f34                 challenge (aka keysource)
- 000c  aa                       ?
- 000d  0100                     ? (constant)
+ 000c  aa01                     battery voltage level (little endian),
+                                e.g 4.26V
+ 000e  00                       ? (constant)
 ```
 
 ### BLE Send Keys
