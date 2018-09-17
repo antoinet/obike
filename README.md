@@ -173,7 +173,9 @@ When used with a payload, this command deletes the current lock record:
 00000010  43 14                                             |C.|
 ```
 
-The payload consists of the current timestamp and the obike identifier:
+The payload for the delete command consists of the "Bike Trade Number" which
+was read out previously, i.e. the timestamp when the bike was rented out and
+the obike identifier:
 
 ```
 Offset Value                    Description
@@ -669,3 +671,10 @@ Server: cloudflare-nginx
  * [FCC filing Huangzhou Luoping Electronics - Smart Locker HBT203](https://fccid.io/2ALWC-HBT203)
  * [Les vélos en libre service dans les villes de Zurich et de Berne sont désormais retirés de la circulation temporairement, rts.ch](https://www.rts.ch/play/tv/19h30/video/les-velos-en-libre-service-dans-les-villes-de-zurich-et-de-berne-sont-desormais-retires-de-la-circulation-temporairement?id=9797225&station=a9e7621504c6960e35c3ecbe7f6bed0446cdf8da)
  * [CVE-2018-16242](https://seclists.org/bugtraq/2018/Sep/30)
+
+## Credits
+I've been contacted by other security researchers, which have also been working
+on the oBike lock system. Thanks for your inputs and contributions:
+ * [@vincent_tky](https://twitter.com/vincent_tky)
+ * mh ([SSD e.V.](https://ssdev.org))
+ * CS3235 students of [NUS Computing](https://www.comp.nus.edu.sg/)
