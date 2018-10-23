@@ -3,6 +3,8 @@ import cryptor
 import time
 import json
 
+requests.packages.urllib3.disable_warnings()
+
 static_headers = {
     'platform': 'Android',
     'Content-Type': 'application/json; charset=utf-8',
