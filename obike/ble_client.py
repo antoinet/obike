@@ -36,18 +36,18 @@ class BleClient(object):
             # hexdump(data)
             self.buffer.append(data)
 
-    def chunks(self, l, n):
+    def __chunks(self, l, n):
         """Yield successive n-sized chunks from l."""
         for i in range(0, len(l), n):
             yield l[i:i+n]
 
-    def write(self, data):
+    def _write(self, data):
         """ low level ble write """
         self.buffer.clear()
         print Fore.RED + "Writing data..." + Back.RED + Style.BRIGHT
         hexdump(data)
         print Style.RESET_ALL
-        parts = self.chunks(data, 19)
+        parts = self.__chunks(data, 19)
         for part in parts:
             self.peripheral.writeCharacteristic(0x0035, part)
 
@@ -58,41 +58,58 @@ class BleClient(object):
         print Style.RESET_ALL
         return ''.join(self.buffer)
 
-    def write_cmd(self, cmd, payload):
+    def _write_cmd(self, cmd, payload):
         """ write obike cmd """
         chksum = reduce(lambda x, y: chr(ord(x) ^ ord(y)), chr(cmd)+payload)
         length = len(payload)
         buffer = "\x67\x74" + chr(length) + chr(cmd) + payload + chksum
-        return self.write(buffer)
+        return self._write(buffer)
 
-    def hello(self):
-        print "Hello..."
-        return self.write_cmd(0x86, "")
+    def _get_bike_no(self):
+        """Returns the oBike identifier,
+        i.e. the MAC address without the first 3 digits.
+        """
+        return self.mac.replace(':', '')[3:].upper()
 
-    def hello_lock_bike(self, timestamp):
-        print "Hello lock bike..."
+    def get_lock_record(self):
+        """Return the lock record, a data record persisted by the chip.
+        Command type 0x86
+        """
+        print "[+] get_lock_record (0x86)"
+        return self._write_cmd(0x86, "")
+
+    def delete_lock_record(self, timestamp):
+        """Delete the lock record.
+        Command type 0x86
+        """
+        print "[+] delete_lock_record (0x86)"
         buffer = bytes(struct.pack('>I', timestamp)) + \
-            bytes(self.mac.replace(':', '')[3:].upper())
-        result = self.write_cmd(0x86, buffer)
+            bytes(self._get_bike_no())
+        result = self._write_cmd(0x86, buffer)
 
-    def push_coords(self, lat, lng):
-        print "Push coords..."
+    def get_challenge(self, lat, lng):
+        """Get a challenge.
+        Command type 0x81
+        """
+        print "[+] get_challenge (0x81)"
         buffer = "%010.7f%09.6f" % (lat, lng)
-        result = self.write_cmd(0x81, buffer)
-
-        # assert result[0:2] == "\x67\x74"
-        # assert result[3] == "\x41"
-        # assert result[4:8] == "\x00\x11\x51\x00"
+        result = self._write_cmd(0x81, buffer)
         return result[8:12]
 
-    def send_keys(self, enc_key, timestamp, keys):
-        print "Send keys..."
+    def send_response(self, enc_key, timestamp, keys):
+        """Send the response.
+        Command type 0x82
+        """
+        print "[+] send_response (0x82)"
         buffer = chr(enc_key) + \
             "\x00\x01\x23\x45\x67\x89\x00" + \
             struct.pack('<I', timestamp) + \
             keys[0:12]
-        result = self.write_cmd(0x82, buffer)
+        result = self._write_cmd(0x82, buffer)
 
     def reset(self):
-        print "Reset chip"
-        result = self.write_cmd(0x89, '')
+        """Reset the chip.
+        Command type 0x86
+        """
+        print "[+] reset (0x89)"
+        result = self._write_cmd(0x89, "")
