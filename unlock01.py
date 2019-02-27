@@ -14,8 +14,23 @@ from colorama import Fore, Back, Style
 import json
 import struct
 import argparse
-import random
 import traceback
+import requests
+import logging
+
+try:
+    import http.client as http_client
+except ImportError:
+    # Python 2
+    import httplib as http_client
+http_client.HTTPConnection.debuglevel = 1
+
+# You must initialize logging, otherwise you'll not see debug output.
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger("requests.packages.urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
 
 macaddr = 'd4:36:39:b8:78:2f'
 
@@ -28,35 +43,20 @@ def unlock_bike(mac, iface=0, verify=False):
 
     # [1] say hello to lock
     res = c.get_lock_record()
-    if len(res) > 5:
-        # if necessary, delete_lock_record first
-        ts = struct.unpack('>I', res[10:14])[0]
-        print "timestamp: %d" % ts
-        c.delete_lock_record(ts)
 
     # [2] receive challenge
-    challenge = c.get_challenge(8.5308422, 47.372763).encode('hex').upper()
+    challenge = c.get_challenge()['challenge']
     print "Challenge: %s" % challenge
 
     # [3], [4] get response from obike server
-#    success = False
-#    for i in range(0, 10):
-#        bikeno = "04100" + str(random.randint(1000, 9999))
-#        print "Taking bikeno: %s" % bikeno
-#        res = h.unlock_pass(bikeno, challenge)['data']
-#        print "Response from server: " +  json.dumps(res)
-#        if 'encryptionKey' in res:
-#            success = True
-#            break
-#    if not success:
-#        print Fore.MAGENTA + Style.BRIGHT +
-#            "Error: could not find a valid bike, aborting." + Style.RESET_ALL
+    # TODO: resolve bikeno from lockdb
     bikeno = '041001802'
-    res = h.unlock_pass(bikeno, challenge)['data']
+    res = h.unlock_pass(bikeno, challenge)
+    print json.dumps(res, indent=4, separators=(',', ': '))
 
     # [5] send response to lock
-    c.send_response(res['encryptionKey'], res['serverTime']/1000,
-                    res['keys'].decode('hex'))
+    c.send_response(res['data']['encryptionKey'], res['data']['serverTime']/1000,
+                    res['data']['keys'].decode('hex'))
 
     # [6] TODO get acknowledgement from lock
     # [7] TODO send acknowledgement to obike server
