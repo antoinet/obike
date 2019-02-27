@@ -15,13 +15,14 @@ for i in range(0, 20000):
             res = h.unlock_pass(bikeno, challenge)['data']
             if res['encryptionKey'] >= 168:
                 break
-    except:
+    except Exception:
         continue
     try:
-        line = '%s,%s,%s,%s\n' % (challenge, res['encryptionKey'], res['keys'], res['serverTime'])
+        line = '%s,%s,%s,%s\n' % \
+            (challenge, res['encryptionKey'], res['keys'], res['serverTime'])
         sys.stdout.write(line)
         f.write(line)
-    except:
+    except Exception:
         sys.stderr.write(json.dumps(res))
         continue
 f.close()

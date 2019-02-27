@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from obike.http_client import HttpClient
 
 client = HttpClient()
@@ -10,5 +13,3 @@ for i in range(1000, 9999):
     f.write("%s %s\n" % (bikeid, lockno))
 
 f.close()
-
-

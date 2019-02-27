@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import requests
 import cryptor
 import time
@@ -13,11 +16,14 @@ static_headers = {
 default_device_id = '2492458045226-123847009231098131'
 default_member_id = '1234567'
 baseurl = 'https://mobile.o.bike/'
-#baseurl = 'http://localhost:8000/'
+# baseurl = 'http://localhost:8000/'
+
 
 class HttpClient(object):
 
-    def __init__(self, version='2.5.4', country_code='+41', device_id=default_device_id, member_id=default_member_id, verify=True):
+    def __init__(self, version='2.5.4', country_code='+41',
+                 device_id=default_device_id, member_id=default_member_id,
+                 verify=True):
         self.version = version
         self.country_code = country_code
         self.device_id = device_id
@@ -39,7 +45,8 @@ class HttpClient(object):
     def _connect(self):
         try:
             with open('/tmp/obike_token') as f:
-                self.session.headers.update({'Authorization': 'Bearer ' + f.readline().strip()})
+                self.session.headers.update(
+                    {'Authorization': 'Bearer ' + f.readline().strip()})
         except IOError as e:
             pass
 
@@ -91,7 +98,8 @@ class HttpClient(object):
             'dateTime': int(time.time()*1000)
         }, separators=(',', ':'))
         payload = {'value': self.cryptor.encrypt(params)}
-        r = self.session.post(baseurl + 'api/v2/bike/%s/lockNo' % bike_no, json=payload)
+        r = self.session.post(baseurl + 'api/v2/bike/%s/lockNo' %
+                              bike_no, json=payload)
         try:
             return r.json()['data']['lockNo']
         except KeyError:
@@ -113,7 +121,8 @@ class HttpClient(object):
             print r.text
 
     @authenticated
-    def lock_message(self, latitude, longitude, index, timestamp, mac_key, vol, transtype, bike_trade_no):
+    def lock_message(self, latitude, longitude, index, timestamp, mac_key,
+                     vol, transtype, bike_trade_no):
         """ wip """
         params = json.dumps({
             'deviceId': self.device_id,
@@ -128,4 +137,3 @@ class HttpClient(object):
             'transtype': 0,
             'bikeTradeNo': bike_trade_no
         }, separators=(',', ':'))
-

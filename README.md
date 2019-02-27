@@ -662,7 +662,7 @@ Server: cloudflare-nginx
  $ apt install git build-essential python python-pip libbluetooth-dev libglib2.0-dev
  $ git clone https://github.com/antoinet/obike.git
  $ cd obike
- $ pip install -r requirements
+ $ pip install -r requirements.txt
 ```
 
 ## References

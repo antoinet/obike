@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from bluepy import btle
 from hexdump import hexdump
 from obike.lockdb import lockdb
+
 
 class BleScanner(object):
 
@@ -12,10 +16,11 @@ class BleScanner(object):
         def handleDiscovery(self, dev, isNewDev, isNewData):
             if isNewDev:
                 name = dev.getValueText(9)
-                lockno = name[5:14]
-                bikeno = lockdb.lookup(lockno)
-                if name and name.startswith('bike:'):
-                    print " [-] %s (%s, %s)" % (bikeno, dev.addr, name)
+                if name:
+                    lockno = name[5:14]
+                    bikeno = lockdb.lookup(lockno)
+                    if name and name.startswith('bike:'):
+                        print " [-] %s (%s, %s)" % (bikeno, dev.addr, name)
 
     def __init__(self, iface=0):
         self.scanner = btle.Scanner(iface).withDelegate(self.ScanDelegate())
@@ -23,6 +28,5 @@ class BleScanner(object):
     def scan(self, t=10):
         print "[*] scanning (%ds)..." % t
         devices = self.scanner.scan(t)
-        #return [dev for dev in devices if dev.addr.upper().startswith('D4')]
+        # return [dev for dev in devices if dev.addr.upper().startswith('D4')]
         return devices
-

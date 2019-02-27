@@ -1,5 +1,7 @@
-import unittest
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+import unittest
 from obike.cryptor import Cryptor
 
 

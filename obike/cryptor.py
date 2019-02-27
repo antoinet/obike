@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA
 
@@ -38,4 +41,3 @@ class Cryptor(object):
 
     def unpad(self, s):
         return s[:-ord(s[len(s)-1:])]
-
