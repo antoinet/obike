@@ -15,7 +15,6 @@ import csv
 import time
 import struct
 import argparse
-import random
 import traceback
 
 keyfile = 'keys/keys_63_1.txt'
@@ -34,6 +33,8 @@ def read_keys(keyfile):
 def unlock_bike(mac, keys, iface=0):
     c = BleClient(mac)
     c.connect()
+
+    # reset the challenge milliseconds counter
     c.reset()
 
     time.sleep(2)
@@ -42,14 +43,9 @@ def unlock_bike(mac, keys, iface=0):
 
     # [1] say hello to lock
     res = c.get_lock_record()
-    if len(res) > 5:
-        # if necessary, lock bike first
-        ts = struct.unpack('>I', res[10:14])[0]
-        print "timestamp: %d" % ts
-        c.delete_lock_record(ts)
 
     # [2] receive challenge
-    challenge = c.get_challenge(8.5308422, 47.372763).encode('hex').upper()
+    challenge = c.get_challenge()['challenge']
     print "Challenge: %s" % challenge
 
     # look up response

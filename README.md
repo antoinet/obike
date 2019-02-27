@@ -157,12 +157,12 @@ Offset Value                    Description
 
  0028  30382e353330383432320000 longitude (08.5308422)
 
- 0035  8776f37a8cbe90f84ba4fa002eaee3dc  mackey (128 bits)
+ 0034  8776f37a8cbe90f84ba4fa002eaee3dc  mackey (128 bits)
 
  0044  91                       key index
 
  0045  000000                   ?
- 004b  a901                     battery voltag level (little endian)
+ 0048  a901                     battery voltag level (little endian)
                                 e.g. 4.25V
 ```
 
