@@ -3,7 +3,11 @@
 This document provides an analysis of the oBike communication protocols as of
 January 2018.
 
-Results have been presented at the [AREA41 security conference 2018](https://a41con.ch/):
+Results have been presented at the [insomni'hack security conference 2019](https://insomnihack.ch/conference-2019/):
+ * [slides](https://www.slideshare.net/AntoineNeuenschwande/on-the-security-of-bike-sharing-services-insomnihack-2019)
+ * [recording](https://www.youtube.com/watch?v=bV9t7--pekk)
+
+as well as at the [AREA41 security conference 2018](https://a41con.ch/):
  * [slides](https://www.slideshare.net/AntoineNeuenschwande/on-the-security-of-dockless-bike-sharing-services)
  * [recording](https://www.youtube.com/watch?v=KKlCLsU4v7o)
 
